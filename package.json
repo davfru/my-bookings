@@ -1,0 +1,35 @@
+{
+  "name": "my-bookings",
+  "version": "1.0.0",
+  "description": "Rest APIs on AWS architecture for online room booking",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "api-integration:dev": "rm -rf openapi-integration/dev/output && serverless integration create --output openapi-integration/dev/output --type http --stage=dev",
+    "api-integration-merge:dev": "serverless integration merge --stage=dev",
+    "api:dev": "npm run api-integration:dev && npm run api-integration-merge:dev",
+    "undeploy:dev": "./script/undeploy.sh dev eu-central-1",
+    "deploy:dev": "./script/deploy.sh dev eu-central-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davfru/my-bookings.git"
+  },
+  "author": "Davide Fruci",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davfru/my-bookings/issues"
+  },
+  "homepage": "https://github.com/davfru/my-bookings#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "serverless": "^3.36.0",
+    "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "serverless-deployment-bucket": "^1.6.0",
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-openapi-integration-helper": "^2.3.0"
+  }
+}

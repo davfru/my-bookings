@@ -4,3 +4,7 @@ jspm_packages
 
 # Serverless directories
 .serverless
+.DS_Store
+
+openapi-integration/**/output
+openapi-integration/api.yml

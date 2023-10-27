@@ -1,0 +1,157 @@
+openapi: 3.0.0
+info:
+  title: Rooms and Bookings Service API
+  version: 1.0.0
+  description: API service for managing rooms and bookings
+
+components:
+  examples: {}
+  headers: {}
+  parameters: {}
+  requestBodies: {}
+  responses: {}
+  schemas: {}
+  securitySchemes:
+    api_key:
+      type: "apiKey"
+      name: "x-api-key"
+      in: "header"
+
+paths:
+
+  /{proxy+}:
+    options:
+      responses:
+        200:
+          description: ''
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: 'string'
+            Access-Control-Allow-Methods:
+              schema:
+                type: 'string'
+            Access-Control-Max-Age:
+              schema:
+                type: 'string'
+            Access-Control-Allow-Headers:
+              schema:
+                type: 'string'
+      x-amazon-apigateway-integration:
+        responses:
+          200:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,POST,PUT,PATCH,GET,HEAD,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'*'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        passthroughBehavior: 'never'
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        type: 'mock'
+
+  /my-bookings/rooms:
+    post:
+      summary: Create a new room
+      operationId: createRoom
+      security:
+        - api_key: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roomNumber:
+                  type: string
+                roomType:
+                  type: string
+                price:
+                  type: number
+              required:
+                - roomNumber
+                - roomType
+                - price
+      responses:
+        '201':
+          description: Room created successfully
+        '401':
+          description: Unauthorized, authentication required
+        '500':
+          description: Internal Server Error
+
+  /my-bookings/rooms/{id}:
+    get:
+      summary: Get a room by ID
+      operationId: getRoomById
+      security:
+        - api_key: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Room retrieved successfully
+        '401':
+          description: Unauthorized, authentication required
+        '404':
+          description: Room not found
+        '500':
+          description: Internal Server Error
+
+  /my-bookings/bookings:
+    post:
+      summary: Create a new booking
+      operationId: createBooking
+      security:
+        - api_key: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                room_id:
+                  type: string
+                check_in_date:
+                  type: string
+                check_out_date:
+                  type: string
+              required:
+                - room_id
+                - check_in_date
+                - check_out_date
+      responses:
+        '201':
+          description: Booking created successfully
+        '401':
+          description: Unauthorized, authentication required
+        '500':
+          description: Internal Server Error
+
+  /my-bookings/bookings/{id}:
+    get:
+      summary: Get a booking by ID
+      operationId: getBookingById
+      security:
+        - api_key: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Booking retrieved successfully
+        '401':
+          description: Unauthorized, authentication required
+        '404':
+          description: Booking not found
+        '500':
+          description: Internal Server Error

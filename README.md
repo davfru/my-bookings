@@ -46,7 +46,7 @@ npm run test
 ### run lambda locally
 
 ```bash
-npm run ...
+npm run invoke-post-booking
 ```
 
 ### deploy

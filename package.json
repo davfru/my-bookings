@@ -11,7 +11,9 @@
     "api:dev": "npm run api-integration:dev && npm run api-integration-merge:dev",
     "undeploy:dev": "./script/undeploy.sh dev eu-central-1",
     "deploy:dev": "./script/deploy.sh dev eu-central-1",
-    "deploy-booking-api:dev": "serverless deploy function -f bookingApi --stage dev --region eu-central-1"
+    "deploy-booking-api:dev": "serverless deploy function -f bookingApi --stage dev --region eu-central-1",
+    "invoke-post-booking": "npx sls invoke local -f bookingApi --path src/api/events/postBooking.json",
+    "invoke-get-booking": "npx sls invoke local -f bookingApi --path src/api/events/getBooking.json"
   },
   "repository": {
     "type": "git",

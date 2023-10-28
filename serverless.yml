@@ -57,15 +57,11 @@ resources:
       Properties:
         TableName: ${self:provider.stage}-bookings
         AttributeDefinitions:
-          - AttributeName: RoomId
-            AttributeType: S
-          - AttributeName: BookingDate
+          - AttributeName: BookingId # base 64 format
             AttributeType: S
         KeySchema:
-          - AttributeName: RoomId
+          - AttributeName: BookingId
             KeyType: HASH
-          - AttributeName: BookingDate
-            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5

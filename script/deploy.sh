@@ -9,7 +9,10 @@ echo "deploying on $stage stage and $region region"
 npm i # install deps
 
 # run tests
-npm run test 
+if ! npm run test; then
+  echo "Tests failed. Exiting with code 1"
+  exit 1
+fi
 
 # update apigateway swagger file
 npm run api:$stage 

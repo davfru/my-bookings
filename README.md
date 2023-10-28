@@ -2,13 +2,14 @@
 
 ## Overview
 
-This project contains rest APIs on AWS architecture for online room booking
+This project contains rest APIs, written using nodejs and express, on AWS architecture for online booking.
 Have a look at the architecture at docs/architecture.drawio
 
 - the aws resource are created using serverless framework (check serverless.yml under resources.Resources)
 - api gateway integration is made using this cool pluging https://www.serverless.com/plugins/serverless-openapi-integration-helper#overview
 Basically with 'npm run api:dev' command, serveless merges the swagger.yml with files found under openapi-integration/dev folder.
 See also 'openApiIntegration' in serverless.yml.
+- body request validation are made with yup library
 
 # Prerequisites
 

@@ -29,7 +29,7 @@ openApiIntegration:
 
 functions:
   bookingApi:
-    handler: src/api/bookings-handler.handler
+    handler: src/api/bookingsHandler.handler
     name: ${self:provider.stage}BookingApi
     description: rest apis to booking rooms
     memorySize: ${file(./src/configs/config.${self:provider.region}.${self:provider.stage}.json):MEMORY_SIZE}

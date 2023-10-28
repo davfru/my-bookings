@@ -10,7 +10,8 @@
     "api-integration-merge:dev": "serverless integration merge --stage=dev",
     "api:dev": "npm run api-integration:dev && npm run api-integration-merge:dev",
     "undeploy:dev": "./script/undeploy.sh dev eu-central-1",
-    "deploy:dev": "./script/deploy.sh dev eu-central-1"
+    "deploy:dev": "./script/deploy.sh dev eu-central-1",
+    "deploy-booking-api:dev": "serverless deploy function -f bookingApi --stage dev --region eu-central-1"
   },
   "repository": {
     "type": "git",

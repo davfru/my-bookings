@@ -1,35 +1,5 @@
 paths:
-  /my-bookings/rooms:
-    post:
-      x-amazon-apigateway-integration:
-        httpMethod: "POST"
-        uri:
-          Fn::Join:
-            - ""
-            - - "arn:aws:apigateway:"
-              - Ref: AWS::Region
-              - ":lambda:path/2015-03-31/functions/"
-              - Fn::GetAtt: ["BookingApiLambdaFunction", "Arn"]
-              - '/invocations'
-        type: "aws_proxy"
-        passthroughBehavior: "when_no_match"
-        
-  /my-bookings/rooms/{id}:
-    get:
-      x-amazon-apigateway-integration:
-        httpMethod: "POST"
-        uri:
-          Fn::Join:
-            - ""
-            - - "arn:aws:apigateway:"
-              - Ref: AWS::Region
-              - ":lambda:path/2015-03-31/functions/"
-              - Fn::GetAtt: ["BookingApiLambdaFunction", "Arn"]
-              - '/invocations'
-        type: "aws_proxy"
-        passthroughBehavior: "when_no_match"
-
-  /my-bookings/bookings:
+  /bookings:
     post:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
@@ -44,7 +14,7 @@ paths:
         type: "aws_proxy"
         passthroughBehavior: "when_no_match"
 
-  /my-bookings/bookings/{id}:
+  /bookings/{id}:
     get:
       x-amazon-apigateway-integration:
         httpMethod: "POST"

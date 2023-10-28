@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Rooms and Bookings Service API
+  title: Rooms bookings Service API
   version: 1.0.0
-  description: API service for managing rooms and bookings
+  description: API service for managing rooms bookings
 
 components:
   examples: {}
@@ -50,60 +50,7 @@ paths:
           application/json: '{"statusCode": 200}'
         type: 'mock'
 
-  /my-bookings/rooms:
-    post:
-      summary: Create a new room
-      operationId: createRoom
-      security:
-        - api_key: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                roomNumber:
-                  type: string
-                roomType:
-                  type: string
-                price:
-                  type: number
-              required:
-                - roomNumber
-                - roomType
-                - price
-      responses:
-        '201':
-          description: Room created successfully
-        '401':
-          description: Unauthorized, authentication required
-        '500':
-          description: Internal Server Error
-
-  /my-bookings/rooms/{id}:
-    get:
-      summary: Get a room by ID
-      operationId: getRoomById
-      security:
-        - api_key: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Room retrieved successfully
-        '401':
-          description: Unauthorized, authentication required
-        '404':
-          description: Room not found
-        '500':
-          description: Internal Server Error
-
-  /my-bookings/bookings:
+  /bookings:
     post:
       summary: Create a new booking
       operationId: createBooking
@@ -116,25 +63,29 @@ paths:
             schema:
               type: object
               properties:
-                room_id:
+                roomId:
                   type: string
-                check_in_date:
+                checkInDate:
                   type: string
-                check_out_date:
+                  pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" # ex 2023-10-10
+                checkOutDate:
                   type: string
+                  pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
               required:
-                - room_id
-                - check_in_date
-                - check_out_date
+                - roomId
+                - checkInDate
+                - checkOutDate
       responses:
         '201':
-          description: Booking created successfully
+          description: Room booking successfully created
         '401':
           description: Unauthorized, authentication required
+        '409':
+          description: Room already booked for the given date
         '500':
           description: Internal Server Error
 
-  /my-bookings/bookings/{id}:
+  /bookings/{id}:
     get:
       summary: Get a booking by ID
       operationId: getBookingById

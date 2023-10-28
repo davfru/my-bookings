@@ -29,22 +29,15 @@ openApiIntegration:
 
 functions:
   bookingApi:
-    handler: src/api/handler.handler
+    handler: src/api/bookings-handler.handler
     name: ${self:provider.stage}BookingApi
-    description: rest apis to create and booking rooms
+    description: rest apis to booking rooms
     memorySize: ${file(./src/configs/config.${self:provider.region}.${self:provider.stage}.json):MEMORY_SIZE}
-    timeout: 10
+    timeout: ${file(./src/configs/config.${self:provider.region}.${self:provider.stage}.json):TIMEOUT}
     environment:
-      ROOMS_TABLE_NAME: ${self:resources.Resources.RoomsTable.Properties.TableName}
       BOOKINGS_TABLE_NAME: ${self:resources.Resources.BookingsTable.Properties.TableName}
     iamRoleStatementsName: ${self:provider.stage}-${self:provider.region}-BookingApiRole
     iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:getItem
-          - dynamodb:putItem
-          - dynamodb:deleteItem
-        Resource: !GetAtt RoomsTable.Arn
       - Effect: Allow
         Action:
           - dynamodb:getItem
@@ -59,30 +52,20 @@ resources:
     # dynamo db #
     #############
 
-    RoomsTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        TableName: ${self:provider.stage}-rooms
-        AttributeDefinitions:
-          - AttributeName: roomId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: roomId
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
-
     BookingsTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         TableName: ${self:provider.stage}-bookings
         AttributeDefinitions:
-          - AttributeName: bookingId
+          - AttributeName: RoomId
+            AttributeType: S
+          - AttributeName: BookingDate
             AttributeType: S
         KeySchema:
-          - AttributeName: bookingId
+          - AttributeName: RoomId
             KeyType: HASH
+          - AttributeName: BookingDate
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
@@ -151,7 +134,7 @@ resources:
     # note that lambda named "bookingApi" becomes "BookingApiLambdaFunction" in Cloudformation due to a normalization
     # more info: https://www.serverless.com/framework/docs/providers/aws/guide/resources#aws-cloudformation-resource-reference
 
-    Permission:
+    InvokeBookingApiPermission:
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:

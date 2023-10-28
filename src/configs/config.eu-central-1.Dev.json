@@ -1,3 +1,4 @@
 {
-  "MEMORY_SIZE": 512
+  "MEMORY_SIZE": 128,
+  "TIMEOUT": 15
 }

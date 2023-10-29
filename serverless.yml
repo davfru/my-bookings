@@ -5,7 +5,6 @@ provider:
   runtime: nodejs16.x
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'eu-central-1'}
-  # title: 'my-bookings'
   deploymentBucket:
     name: my-bookings-deployment-bucket
     serverSideEncryption: AES256
@@ -65,6 +64,38 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+
+    ###########
+    # cognito #
+    ###########
+
+    ClientUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        AliasAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireLowercase: true
+            RequireNumbers: true
+            RequireSymbols: true
+            RequireUppercase: true
+            TemporaryPasswordValidityDays: 7
+        UserPoolName: ${self:provider.stage}ClientUserPool
+
+    # client for web app
+    UserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId:
+          Ref: ClientUserPool
+        ClientName: WebClientPoolClient
+        ExplicitAuthFlows:
+          - "ALLOW_USER_PASSWORD_AUTH"
+          - "ALLOW_REFRESH_TOKEN_AUTH"
 
     ###############
     # api gateway #
@@ -139,6 +170,22 @@ resources:
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
+
+    # attach authorization to api gateway
+    CognitoAuthorizer:
+      Type: 'AWS::ApiGateway::Authorizer'
+      DependsOn: ApiGatewayRestApi
+      Properties:
+        Name: ${self:provider.stage}MyCognitoAuthorizer
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        IdentitySource: method.request.header.Authorization
+        AuthorizerResultTtlInSeconds: 300
+        ProviderARNs:
+          - Fn::GetAtt:
+              - ClientUserPool
+              - Arn
 
 package:
   excludeDevDependencies: true

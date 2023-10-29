@@ -6,5 +6,6 @@ jspm_packages
 .serverless
 .DS_Store
 
+.cognito
+
 openapi-integration/**/output
-openapi-integration/api.yml

@@ -4,7 +4,7 @@
     "httpMethod": "POST",
     "body": {
       "roomId": "1234",
-      "checkInDate": "2023-12-13", 
+      "checkInDate": "2023-12-03", 
       "checkOutDate": "2023-12-15"
     }
 }

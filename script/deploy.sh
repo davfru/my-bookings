@@ -1,12 +1,14 @@
 stage=$1
 region=$2
+api_name='my-bookings-api'
 
-# This script can be used for CI/CD
+# This script can be used as a starting point for CI/CD
 
 # create or update cloudformation stack
 echo "deploying on $stage stage and $region region"
 
-npm i # install deps
+# install deps
+npm i 
 
 # run tests
 if ! npm run test; then
@@ -17,12 +19,15 @@ fi
 # update apigateway swagger file
 npm run api:$stage 
 
-# todo
-# add deploy api to update Api gateway stage
-
-# update cloudformation (then lambda rest api)
+# update cloudformation and deploy
 serverless deploy --stage $stage --region $region 
 
-# update apigateway routes
+# update apigateway stage
+
+# get existing api id
+api_id=$(aws apigateway get-rest-apis --region $region | jq -r -e ".items | map(select(.name ==\"$api_name\"))[0]?.id")
+
+# update stage
+aws apigateway create-deployment --region $region --rest-api-id $api_id --stage-name $stage
 
 

@@ -3,7 +3,6 @@ info:
   title: my-bookings-api
   version: 1.0.0
   description: API service for managing rooms bookings
-
 components:
   examples: {}
   headers: {}
@@ -11,41 +10,53 @@ components:
   requestBodies: {}
   responses: {}
   schemas: {}
-  securitySchemes: {}
-
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: x-api-key
+      in: header
+    cognito_authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        type: cognito_user_pools
+        providerARNs:
+          - Fn::GetAtt:
+              - ClientUserPool
+              - Arn
 paths:
-
   /{proxy+}:
     options:
       responses:
-        200:
+        '200':
           description: ''
           headers:
             Access-Control-Allow-Origin:
               schema:
-                type: 'string'
+                type: string
             Access-Control-Allow-Methods:
               schema:
-                type: 'string'
+                type: string
             Access-Control-Max-Age:
               schema:
-                type: 'string'
+                type: string
             Access-Control-Allow-Headers:
               schema:
-                type: 'string'
+                type: string
       x-amazon-apigateway-integration:
         responses:
-          200:
+          '200':
             statusCode: '200'
             responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,POST,PUT,PATCH,GET,HEAD,OPTIONS'"
-              method.response.header.Access-Control-Allow-Headers: "'*'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        passthroughBehavior: 'never'
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,POST,PUT,PATCH,GET,HEAD,OPTIONS'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: never
         requestTemplates:
           application/json: '{"statusCode": 200}'
-        type: 'mock'
-
+        type: mock
   /bookings:
     post:
       summary: Create a new booking
@@ -61,10 +72,10 @@ paths:
                   type: string
                 checkInDate:
                   type: string
-                  pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" # ex 2023-10-10
+                  pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
                 checkOutDate:
                   type: string
-                  pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
               required:
                 - roomId
                 - checkInDate
@@ -78,7 +89,23 @@ paths:
           description: Room already booked for the given date
         '500':
           description: Internal Server Error
-
+      security:
+        - api_key: []
+        - cognito_authorizer: []
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ':lambda:path/2015-03-31/functions/'
+              - Fn::GetAtt:
+                  - BookingApiLambdaFunction
+                  - Arn
+              - /invocations
+        type: aws_proxy
+        passthroughBehavior: when_no_match
   /bookings/{id}:
     get:
       summary: Get a booking by ID
@@ -98,3 +125,20 @@ paths:
           description: Booking not found
         '500':
           description: Internal Server Error
+      security:
+        - api_key: []
+        - cognito_authorizer: []
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ':lambda:path/2015-03-31/functions/'
+              - Fn::GetAtt:
+                  - BookingApiLambdaFunction
+                  - Arn
+              - /invocations
+        type: aws_proxy
+        passthroughBehavior: when_no_match

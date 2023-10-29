@@ -9,21 +9,22 @@ Have a look at the architecture at docs/architecture.drawio
 
 - aws resources created using serverless framework
 - api gateway integration with swagger.yml
+- api gateway protected via cognito authentication
 - body request validation using with yup library and express framework
-- sh script to deploy the service
+- sh scripts to deploy/undeploy the service
 
 ### Nice to have
 
+- implement sign up/login API to interact with cognito (see /script/signup.sh, /script/login.sh)
 - CI/CD to 
     - automate the build, test and deploy (cloudformation stack update, apigateway routes update) starting from sh script
-    - update api gateway stage from swagger (to refresh the routes)
 - logging (cloudwatch access logs and application)
 - add typescript
-- automatic swagger generation (currently it has been created manually)
+- automatic swagger generation from express (currently it has been created manually)
 - add tags to cf resources (for better aws billing understanding)
 - add code analysis (such as sonarqube) in pipeline
 - add tests in postman collection
-- add delete protection on test and prod resources (using serverless if else plugin)
+- add delete protection on test and prod resources (using serverless if else plugin). Resources such as: dynamo db table, cognito pool
 - add a module bundler (such as webpack)
 
 # Prerequisites
@@ -48,6 +49,30 @@ npm run test
 ```bash
 npm run invoke-post-booking
 ```
+
+### invoke API from Postman
+
+As improvment, the following scripts can be replaced by POST /account and POST /login API
+
+first create a .cognito file in the root of the project and add the following:
+
+```bash
+CLIENT_ID=cognito client id here
+USER_POOL_ID=user pool id here
+```
+
+the run
+
+```bash
+npm run cognito-signup # register user on cognito
+npm run cognito-login # authenticate user. This script print an IdToken that must be passed as Authorization header in the APIs which require it
+```
+
+then
+
+- import postman_collenction.json in Postman
+- set x-api-key (you can get it from apigateway usage plan once stack is deployed) and Authorization header (from login.sh script) in postman env variables
+- invoke the API!
 
 ### deploy
 

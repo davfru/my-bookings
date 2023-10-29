@@ -13,7 +13,9 @@
     "deploy:dev": "./script/deploy.sh dev eu-central-1",
     "deploy-booking-api:dev": "serverless deploy function -f bookingApi --stage dev --region eu-central-1",
     "invoke-post-booking": "npx sls invoke local -f bookingApi --path src/api/events/postBooking.json",
-    "invoke-get-booking": "npx sls invoke local -f bookingApi --path src/api/events/getBooking.json"
+    "invoke-get-booking": "npx sls invoke local -f bookingApi --path src/api/events/getBooking.json",
+    "cognito-signup": "export $(cat .cognito) && ./script/signup.sh",
+    "cognito-login": "export $(cat .cognito) && ./script/login.sh"
   },
   "repository": {
     "type": "git",

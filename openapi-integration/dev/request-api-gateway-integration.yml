@@ -1,6 +1,25 @@
+components:
+  securitySchemes:
+    api_key:
+      type: "apiKey"
+      name: "x-api-key"
+      in: "header"
+    cognito_authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        type: cognito_user_pools
+        providerARNs:
+          - Fn::GetAtt: ["ClientUserPool", "Arn"]
+
 paths:
   /bookings:
     post:
+      security:
+        - api_key: []
+        - cognito_authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri:
@@ -16,6 +35,9 @@ paths:
 
   /bookings/{id}:
     get:
+      security:
+        - api_key: []
+        - cognito_authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: "POST"
         uri:

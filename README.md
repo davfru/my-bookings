@@ -2,16 +2,18 @@
 
 ## Overview
 
-This project contains rest APIs, written using nodejs and express, on AWS architecture for online booking.
-Have a look at the architecture at docs/architecture.drawio
+<img src="/docs/architecture.png" >
+
+With this project you can create the above architecture using AWS Cloudformation.
+Rest APIs are written using nodejs and express, with serverless framework.
 
 ### Features
 
-- aws resources created using serverless framework
+- aws resources created using serverless framework (cloudformation)
 - api gateway integration with swagger.yml
 - api gateway protected via cognito authentication
 - body request validation using with yup library and express framework
-- sh scripts to deploy/undeploy the service
+- sh scripts to deploy/undeploy the service (starting point for CI/CD)
 
 ### Nice to have
 

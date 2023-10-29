@@ -50,6 +50,17 @@ paths:
     post:
       summary: Create a new booking
       operationId: createBooking
+      parameters:
+        - name: x-api-key
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -84,6 +95,16 @@ paths:
       summary: Get a booking by ID
       operationId: getBookingById
       parameters:
+        - name: x-api-key
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
